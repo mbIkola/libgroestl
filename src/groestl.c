@@ -369,22 +369,23 @@ static void Final(groestlHashState* ctx,
 
 
 /* hash bit sequence */
-__attribute__ ((visibility ("default"))) void groestl(const BitSequence* data,
-		unsigned int datalenght,
-		BitSequence* hashval) {
+void  __attribute__((used))  __attribute__((visibility("default"))) EMSCRIPTEN_KEEPALIVE
+groestl(const uint8_t  *input, size_t len, uint8_t *output) {
+    BitSequence *data = (BitSequence *)input;
+    BitSequence *hashval = (BitSequence *)output;
 
-    DataLength databitlen = datalenght * 8;
-  groestlHashState context;
+    DataLength databitlen = len* 8;
+    groestlHashState context;
 
-  /* initialise */
+    /* initialise */
 	Init(&context);
 
 
-  /* process message */
-  Update(&context, data, databitlen);
+    /* process message */
+    Update(&context, data, databitlen);
 
-  /* finalise */
-  Final(&context, hashval);
+    /* finalise */
+    Final(&context, hashval);
 }
 /*
 static int crypto_hash(unsigned char *out,
